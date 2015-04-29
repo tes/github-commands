@@ -1,0 +1,16 @@
+{
+  "name": "github-commands",
+  "version": "1.0.0",
+  "description": "Bosco commands to help with github",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "async": "^0.9.0",
+    "lodash": "^3.7.0",
+    "octonode": "^0.6.17"
+  }
+}
