@@ -35,11 +35,11 @@ bosco remove-user tes cliftonc
 #### Copy all members of one team to another team
 
 ```
-bosco staff-to-team [org] [team-from] [team-to]
-bosco staff-team tes Staff Modules
+bosco copy-team [org] [team-from] [team-to]
+bosco copy-team tes Staff Modules
 ```
 
-This will add all staff to the team 'modules'.
+This will add all users in the 'Staff' team to the team 'modules'.
 
 #### Add matching repositories to a team
 
