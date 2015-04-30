@@ -1,6 +1,6 @@
 var _ = require('lodash');
 var async = require('async');
-var github = require('octonode');
+var gh = require('../lib/gh');
 var fs = require('fs');
 var path = require('path');
 var exec = require('child_process').exec;
@@ -24,24 +24,11 @@ function cmd(bosco, args, next) {
         process.exit(1);
     }
 
-    var client = github.client(bosco.config.get('github:authToken'));
+    var ghclient = gh(bosco.config.get('github:authToken'));
 
     bosco.log('Removing ' + user + ' from org ' + org);
-    removeUserFromOrg(client, team, user, function(err, result) {
+    ghclient.removeUserFromOrg(org, user, function(err, result) {
         bosco.log('Done');
     });
-
-    function removeUserFromOrg(client, org, username, next) {
-
-        client.requestOptions({
-            headers: {'Accept':'application/vnd.github.moondragon+json'}
-        });
-
-        client.del('/orgs/' + org + '/memberships/' + username, {}, function (err, status, body, headers) {
-            if(err) { return next(err); }
-            next(err, status);
-        });
-
-   }
 
 }
