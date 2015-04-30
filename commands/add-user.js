@@ -25,16 +25,16 @@ function cmd(bosco, args, next) {
         process.exit(1);
     }
 
-    var teamlist = args.split(",");
+    var teamlist = teamlist.split(",");
 
     var client = github.client(bosco.config.get('github:authToken'));
 
     bosco.log('Fetching team list from Github ...');
 
-    getAllTeams(function(err, teams, teamIds) {
+    getAllTeams(function(err, teams, teamsById) {
         var teamIds = getIds(teams);
         async.mapSeries(teamIds, function(team, cb) {
-            bosco.log('Adding ' + user + ' to team ' + teamIds[team]);
+            bosco.log('Adding ' + user + ' to team ' + teamsById[team]);
             addStaffToTeam(client, team, user, function(err, result) {
                 cb(err);
             });
@@ -75,9 +75,9 @@ function cmd(bosco, args, next) {
                 var teams = {}, teamIds = {};
                 teamList.forEach(function(team) {
                     teams[team.name] = team.id;
-                    teamsIds[team.id] = team.name;
+                    teamIds[team.id] = team.name;
                 });
-                cb(err, teams, teamIds)
+                cb(null, teams, teamIds);
             }
         );
     }
