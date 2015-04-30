@@ -32,11 +32,11 @@ bosco remove-user [org] [username]
 bosco remove-user tes cliftonc
 ```
 
-#### Add All 'Staff' to a new team
+#### Copy all members of one team to another team
 
 ```
-bosco staff-team [org] [team]
-bosco staff-team tes Modules
+bosco staff-to-team [org] [team-from] [team-to]
+bosco staff-team tes Staff Modules
 ```
 
 This will add all staff to the team 'modules'.

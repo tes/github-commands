@@ -6,9 +6,9 @@ var path = require('path');
 var exec = require('child_process').exec;
 
 module.exports = {
-    name:'staff-team',
-    description:'Adds all of the members of Staff to a team',
-    example: 'bosco staff-to-team <org> <team>',
+    name:'copy-team',
+    description:'Copies all members of one team to another team',
+    example: 'bosco staff-to-team <org> <team-from> <team-to>',
     cmd:cmd
 }
 
@@ -17,10 +17,11 @@ function cmd(bosco, args, next) {
     var repoPattern = bosco.options.repo;
     var repoRegex = new RegExp(repoPattern);
     var org = args.shift();
-    var team = args.shift();
+    var fromTeam = args.shift();
+    var toTeam = args.shift();
 
-    if(!org || !team) {
-        bosco.error('You must provide an org and team.');
+    if(!org || !fromTeam || !fromTeam) {
+        bosco.error('You must provide an org and teams from and to.');
         process.exit(1);
     }
 
@@ -29,14 +30,18 @@ function cmd(bosco, args, next) {
     bosco.log('Fetching staff list from Github ...');
 
     getAllTeams(function(err, teams) {
-        if(!teams[team]) {
-            bosco.error('Could not find the team: ' + team);
+        if(!teams[fromTeam]) {
+            bosco.error('Could not find the team: ' + fromTeam);
             process.exit(1);
         }
-        getAllStaff(teams, function(err, staffList) {
+        if(!teams[toTeam]) {
+            bosco.error('Could not find the team: ' + toTeam);
+            process.exit(1);
+        }
+        getAllStaff(fromTeam, teams, function(err, staffList) {
             async.mapSeries(staffList, function(staff, cb) {
-                bosco.log('Adding ' + staff + ' to team ' + team);
-                addStaffToTeam(client, teams[team], staff, function(err, result) {
+                bosco.log('Adding ' + staff + ' to team ' + toTeam);
+                addStaffToTeam(client, teams[toTeam], staff, function(err, result) {
                     cb(err);
                 });
             }, function(err) {
@@ -74,12 +79,12 @@ function cmd(bosco, args, next) {
         );
     }
 
-    function getAllStaff(teams, cb) {
+    function getAllStaff(fromTeam, teams, cb) {
         var more = true, page = 1, staffList = [];
         async.whilst(
             function () { return more; },
             function (callback) {
-                getStaff(client, teams['staff'], page, function(err, staff, isMore) {
+                getStaff(client, teams[fromTeam], page, function(err, staff, isMore) {
                     if(err) { return callback(err); }
                     staffList = _.union(staffList, staff);
                     if(isMore) {
