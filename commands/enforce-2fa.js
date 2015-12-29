@@ -29,11 +29,17 @@ function cmd(bosco, args, next) {
     bosco.log('Fetching staff list from Github ...');
 
     ghclient.getAllTeams(org, function(err, teams, teamIds) {
+        if(err) {
+            return bosco.error(err.message);
+        }
         if(team && !teams[team]) {
             bosco.error('Could not find the team: ' + team);
             process.exit(1);
         }
         ghclient.getAll2faDisabledStaff(org, function(err, staffList) {
+            if(err) {
+                return bosco.error(err.message);
+            }
             async.mapSeries(staffList, function(staff, cb) {
                 if(!team) {
                     console.log('Removing ' + staff + ' from ' + org);
