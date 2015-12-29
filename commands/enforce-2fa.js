@@ -34,6 +34,7 @@ function cmd(bosco, args, next) {
             process.exit(1);
         }
         ghclient.getAll2faDisabledStaff(org, function(err, staffList) {
+            console.log('Found\n' + staffList);
             async.mapSeries(staffList, function(staff, cb) {
                 if(!team) {
                     console.log('Removing ' + staff + ' from ' + org);
