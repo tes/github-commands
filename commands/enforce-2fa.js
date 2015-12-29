@@ -33,12 +33,12 @@ function cmd(bosco, args, next) {
             return bosco.error(err.message);
         }
         if(team && !teams[team]) {
-            bosco.error('Could not find the team: ' + team);
+            bosco.error('Error ' + 'Could not find the team: ' + team);
             process.exit(1);
         }
         ghclient.getAll2faDisabledStaff(org, function(err, staffList) {
             if(err) {
-                return bosco.error(err.message);
+                return bosco.error('Error ' + err.message);
             }
             async.mapSeries(staffList, function(staff, cb) {
                 if(!team) {
@@ -52,7 +52,7 @@ function cmd(bosco, args, next) {
                 }
             }, function(err) {
                 if(err) {
-                    return bosco.error(err.message);
+                    return bosco.error('Error ' + err.message);
                 }
                 bosco.log('Complete!');
             })
